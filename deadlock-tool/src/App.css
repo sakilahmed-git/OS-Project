@@ -1,123 +1,281 @@
+/* RESET */
 body {
   margin: 0;
-  background: #020617;
-  color: white;
-  font-family: Arial;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f5f5f7;
+  color: #1d1d1f;
 }
 
+/* APP */
 .app {
   display: flex;
+  flex-direction: column;
   height: 100vh;
 }
 
-.panel {
-  padding: 20px;
+/* HEADER */
+.header {
+  height: 60px;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 25px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* BUTTON GROUP */
+.controls button {
+  margin-left: 8px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  background: #e5e5ea;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.controls button:hover {
+  background: #d1d1d6;
+}
+
+.controls .primary {
+  background: #009be3;
+  color: white;
+}
+
+.controls .primary:hover {
+  background: #005ecb;
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+  display: flex;
   overflow: hidden;
 }
 
-.left {
-  width: 25%;
-  background: rgba(0,255,150,0.05);
+/* SIDEBAR */
+.sidebar {
+  width: 180px;
+  background: #e3710013;
+  backdrop-filter: blur(10px);
+  border-right: 1px solid #e5e5e5;
+  padding: 15px;
 }
 
-.center {
-  width: 35%;
+.controls .dete {
+  color: white;
+  background: #e37100;
+}
+.controls .dete:hover {
+  background: #c16000;
+}
+
+.sidebar button {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+  background: #009fe3;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sidebar button:hover {
+  background: #0098cb;
+  transform: translateY(-1px);
+}
+
+/* CANVAS */
+.canvas {
+  flex: 1;
+  background: #fafafa;
   position: relative;
 }
 
-.right {
-  width: 40%;
-  background: rgba(0,150,255,0.05);
+/* STATUS BAR */
+.status {
+  height: 45px;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid #e5e5e5;
   display: flex;
-  flex-direction: column;
-}
-
-textarea {
-  width: 100%;
-  height: 120px;
-  background: #0f172a;
-  color: white;
-  border: none;
-  padding: 10px;
-}
-
-button {
-  width: 100%;
-  margin-top: 10px;
-  padding: 12px;
-  background: linear-gradient(45deg,#00f5a0,#00d9f5);
-  border: none;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover {
-  transform: scale(1.05);
-}
-
-svg {
-  background: #020617;
-}
-
-circle {
-  transition: 0.3s;
-}
-
-line {
-  transition: 0.3s;
-}
-
-.output {
-  flex: 1;
-  overflow-y: auto;
-  background: black;
-  padding: 10px;
-  border-radius: 10px;
-  white-space: pre-wrap;
-}
-
-.loading {
-  color: #22c55e;
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  50% { opacity: 0.3; }
+  align-items: center;
+  padding: 0 20px;
+  font-size: 14px;
 }
 
 .node {
-  fill: #1e293b;
-  transition: 0.3s;
+  fill: white;
+  stroke: #0071e3;
+}
+
+.flow-edge {
+  animation: flow 1.2s linear infinite;
+}
+
+@keyframes flow {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: 20;
+  }
+}
+/* POPUP */
+.popup {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #0071e3;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  animation: popupFade 3s forwards;
+}
+
+@keyframes popupFade {
+  0% { opacity: 0; transform: translateY(10px); }
+  10% { opacity: 1; transform: translateY(0); }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* NODE */
+.node {
+  fill: white;
+  stroke: #e37100;
+  stroke-width: 2;
+  transition: all 0.2s ease;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));
 }
 
 .node:hover {
-  transform: scale(1.1);
+  transform: scale(1.01);
 }
 
+/* SELECTED */
+.selected {
+  fill: #e6fdff;           /* light blue instead of black */
+  stroke: #00b9e3;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 10px rgba(0,113,227,0.4));
+}
+
+/* DEADLOCK */
 .deadlock {
-  fill: red;
-  filter: drop-shadow(0 0 10px red);
+  fill: #ff3b30;
+  stroke: #ff3b30;
+  filter: drop-shadow(0 0 14px rgba(255,59,48,0.6));
 }
 
-.edge-line {
-  transition: 0.3s;
+/* EDGES */
+.edge {
+  stroke-dasharray: 6;
+  animation: flow 2s linear infinite;
 }
 
-.edge-line:hover {
-  stroke-width: 4;
+@keyframes flow {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: 20; }
 }
 
-.node-group {
-  animation: fadeIn 0.5s ease;
+/* DYNAMIC ISLAND STYLE */
+.island {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  width: 420px;                 /* 🔥 perfect size */
+  max-width: 90%;
+  
+  padding: 22px 26px;
+  border-radius: 24px;
+
+  backdrop-filter: blur(25px);
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.75),
+    rgba(255,255,255,0.55)
+  );
+
+  border: 1px solid rgba(255,255,255,0.4);
+
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.15),
+    inset 0 1px 1px rgba(255,255,255,0.6);
+
+  animation: slideUp 0.4s ease;
+
+  font-size: 14px;
+  line-height: 1.6;
 }
 
-@keyframes fadeIn {
+.island:hover {
+  transform: translateX(-50%) scale(1.02);
+  transition: 0.2s ease;
+}
+
+/* DEADLOCK STYLE */
+.island.danger {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 59, 48, 0.12),
+    rgba(255, 59, 48, 0.06)
+  );
+
+  border: 1px solid rgba(255, 59, 48, 0.2);
+  color: #1d1d1f;
+}
+
+/* TITLE */
+.island .title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ff3b30;
+  margin-bottom: 10px;
+}
+
+/* SECTIONS */
+.section {
+  margin-top: 10px;
+}
+
+/* LIST */
+ul {
+  margin: 6px 0 0 18px;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 4px;
+  color: #333;
+}
+
+/* ANIMATION */
+@keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateX(-50%) translateY(80px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0) scale(1);
   }
+}
+.island.info {
+  background: rgba(0, 113, 227, 0.08);
+  border: 1px solid rgba(0, 113, 227, 0.2);
+  color: #0071e3;
 }
