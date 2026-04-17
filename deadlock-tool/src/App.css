@@ -279,3 +279,149 @@ li {
   border: 1px solid rgba(0, 113, 227, 0.2);
   color: #0071e3;
 }
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+/* TABLET */
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 140px;
+    padding: 10px;
+  }
+
+  .header {
+    padding: 0 15px;
+  }
+
+  .controls button {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+
+  .island {
+    width: 90%;
+    padding: 18px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+  /* STACK LAYOUT */
+  .main {
+    flex-direction: column;
+  }
+
+  /* HEADER */
+  .header {
+    height: auto;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .controls {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .controls button {
+    flex: 1;
+    margin: 0;
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  /* SIDEBAR → TOP BAR */
+  .sidebar {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    border-right: none;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 10px;
+  }
+
+  .sidebar button {
+    flex: 1;
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  /* CANVAS */
+  .canvas {
+    flex: 1;
+    height: 60vh;
+  }
+
+  /* STATUS */
+  .status {
+    font-size: 12px;
+    padding: 0 10px;
+  }
+
+  /* POPUP */
+  .popup {
+    right: 10px;
+    bottom: 10px;
+    font-size: 12px;
+    padding: 10px 14px;
+  }
+
+  /* ISLAND */
+  .island {
+    width: 95%;
+    padding: 16px;
+    border-radius: 18px;
+    font-size: 13px;
+    bottom: 20px;
+  }
+
+  .island .title {
+    font-size: 14px;
+  }
+}
+
+/* SMALL MOBILE */
+@media (max-width: 480px) {
+
+  .controls button {
+    font-size: 11px;
+    padding: 6px;
+  }
+
+  .sidebar button {
+    font-size: 11px;
+    padding: 6px;
+  }
+
+  .title {
+    font-size: 14px;
+  }
+
+  .canvas {
+    height: 55vh;
+  }
+
+  .island {
+    font-size: 12px;
+    padding: 14px;
+  }
+}
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+* {
+  box-sizing: border-box;
+}
