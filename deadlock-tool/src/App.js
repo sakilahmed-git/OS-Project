@@ -17,18 +17,27 @@ function App() {
   const count = nodes.filter(n => n.type === type).length + 1;
   const id = type + count;
 
+  const width = window.innerWidth;
+  const height = window.innerHeight * 0.6;
+
   const newNodes = [
     ...nodes,
     {
       id,
       type,
-      x: type === "P" ? 200 : 600,
-      y: 150 + nodes.length * 70
+
+      // 🔥 PERFECT BALANCE
+      x: type === "P"
+        ? width * 0.3
+        : width * 0.7,
+
+      // 🔥 keep inside screen always
+      y: Math.min(150 + nodes.length * 70, height - 80)
     }
   ];
 
   saveHistory(newNodes, edges);
-  // 🔥 ADD MESSAGE
+
   setResult({
     type: "info",
     message: `${type === "P" ? "Process" : "Resource"} added (${id})`
@@ -177,33 +186,44 @@ if (!result || result.type === "deadlock") {
 
   setResolving(true);
 
-  const edgeToRemove = edges.find(e =>
-  cycle.some((node, i) =>
-    node === e.from &&
-    cycle[(i + 1) % cycle.length] === e.to
-  )
+  // 🔥 get ONLY edges that are part of the cycle
+  const cycleEdges = edges.filter(e =>
+    cycle.some((node, i) =>
+      node === e.from &&
+      cycle[(i + 1) % cycle.length] === e.to
+    )
+  );
 
-)
-if (!edgeToRemove) {
-  setResult({ type: "resolved", message: "No removable edge found"});
-  setResolving(false);
-  return;
-};
+  if (cycleEdges.length === 0) {
+    setResolving(false);
+    return;
+  }
 
+  // 🔥 PRIORITY: remove request edge (P → R)
+  let edgeToRemove = cycleEdges.find(e => e.from.startsWith("P"));
+
+  // fallback if none found
+  if (!edgeToRemove) {
+    edgeToRemove = cycleEdges[0];
+  }
 
   setRemovedEdge(edgeToRemove);
 
   setTimeout(() => {
     const newEdges = edges.filter(
-      (e) => !(e.from === edgeToRemove.from && e.to === edgeToRemove.to)
+      e => !(e.from === edgeToRemove.from && e.to === edgeToRemove.to)
     );
 
     saveHistory(nodes, newEdges);
     setCycle([]);
     setRemovedEdge(null);
     setResolving(false);
-    setResult({ type: "resolved", message: "Deadlock Resolved" });
-  }, 2000);
+
+    setResult({
+      type: "resolved",
+      message: `Removed ${edgeToRemove.from} → ${edgeToRemove.to}`
+    });
+  }, 800);
 };
 const saveHistory = (newNodes, newEdges) => {
   setHistory(prev => [...prev, { nodes, edges }]);
@@ -339,10 +359,13 @@ const getEdgePoint = (from, to) => {
       {/* CANVAS */}
       <div className="canvas">
         <svg
-          width="100%"
-          height="100%"
-          onMouseMove={handleMove}
-          onMouseUp={() => setDragging(null)}
+  width="100%"
+  height="100%"
+  onMouseMove={handleMove}
+  onMouseUp={() => setDragging(null)}
+
+  onTouchMove={(e) => handleMove(e.touches[0])}
+  onTouchEnd={() => setDragging(null)}
           onClick={() => setSelected(null)}
         >
 
