@@ -13,6 +13,7 @@ function App() {
   const [history, setHistory] = useState([]);
   
   const [redoStack, setRedoStack] = useState([]);
+  const [mode, setMode] = useState("none"); // "none" | "delete"
   const addNode = (type) => {
   const count = nodes.filter(n => n.type === type).length + 1;
   const id = type + count;
@@ -56,6 +57,15 @@ function App() {
   };
 
 const handleNodeClick = (id) => {
+  if (mode === "delete") {
+    const newNodes = nodes.filter(n => n.id !== id);
+    const newEdges = edges.filter(e => e.from !== id && e.to !== id);
+
+    saveHistory(newNodes, newEdges);
+
+    setResult({ type: "info", message: `${id} deleted` });
+    return;
+  }
   if (!selected) {
     setSelected(id);
   } else {
@@ -188,11 +198,11 @@ if (!result || result.type === "deadlock") {
 
   // 🔥 get ONLY edges that are part of the cycle
   const cycleEdges = edges.filter(e =>
-    cycle.some((node, i) =>
-      node === e.from &&
-      cycle[(i + 1) % cycle.length] === e.to
-    )
-  );
+  cycle.some((node, i) =>
+    node === e.from &&
+    cycle[(i + 1) % cycle.length] === e.to
+  )
+);
 
   if (cycleEdges.length === 0) {
     setResolving(false);
@@ -352,9 +362,23 @@ const getEdgePoint = (from, to) => {
 
       {/* SIDEBAR */}
       <div className="sidebar">
-        <button onClick={() => addNode("P")}>+ Process</button>
-        <button onClick={() => addNode("R")}>+ Resource</button>
-      </div>
+
+  <button onClick={() => addNode("P")}>
+    + Add Process
+  </button>
+
+  <button onClick={() => addNode("R")}>
+    + Add Resource
+  </button>
+
+  <button
+    className={mode === "delete" ? "delete-active" : ""}
+    onClick={() => setMode(mode === "delete" ? "none" : "delete")}
+  >
+    ❌ {mode === "delete" ? "Exit Delete" : "Delete"}
+  </button>
+
+</div>
 
       {/* CANVAS */}
       <div className="canvas">
@@ -405,22 +429,22 @@ const getEdgePoint = (from, to) => {
           ))}
 
           {/* EDGES */}
-          {edges.map((e, i) => {
-            const from = getNode(e.from);
-            const to = getNode(e.to);
+          {edges.map((edge, i) => {
+            const from = getNode(edge.from);
+            const to = getNode(edge.to);
             if (!from || !to) return null;
 
 
             const isCycle = cycle.some(
               (node, index) =>
-                node === e.from &&
-                cycle[(index + 1) % cycle.length] === e.to
+                node === edge.from &&
+                cycle[(index + 1) % cycle.length] === edge.to
             );
 
             const isRemoved =
               removedEdge &&
-              e.from === removedEdge.from &&
-              e.to === removedEdge.to;
+              edge.from === removedEdge.from &&
+              edge.to === removedEdge.to;
             const start = getEdgePoint(from, to);
                 const end = getEdgePoint(to, from);
 
@@ -429,6 +453,22 @@ const getEdgePoint = (from, to) => {
             return (
               <path
                 key={i}
+                onClick={(ev) => {
+  ev.stopPropagation();
+
+  if (mode === "delete") {
+    const newEdges = edges.filter(
+      ed => !(ed.from === edge.from && ed.to === edge.to)
+    );
+
+    saveHistory(nodes, newEdges);
+
+    setResult({
+      type: "info",
+      message: `${edge.from} → ${edge.to} deleted`
+    });
+  }
+}}
                 
                 d={`M ${start.x} ${start.y} Q ${dx} ${dy} ${end.x} ${end.y}`}
                 stroke={
@@ -450,9 +490,9 @@ const getEdgePoint = (from, to) => {
           })}
 
           {/* FLOW ANIMATION */}
-          {edges.map((e, i) => {
-            const from = getNode(e.from);
-            const to = getNode(e.to);
+          {edges.map((edge, i) => {
+            const from = getNode(edge.from);
+            const to = getNode(edge.to);
             if (!from || !to) return null;
 
             const start = getEdgePoint(from, to);
@@ -474,9 +514,9 @@ return (
 
           {/* RESOLVE ANIMATION */}
           {resolving &&
-            edges.map((e, i) => {
-              const from = getNode(e.from);
-              const to = getNode(e.to);
+            edges.map((edge, i) => {
+              const from = getNode(edge.from);
+              const to = getNode(edge.to);
               if (!from || !to) return null;
 
               return (

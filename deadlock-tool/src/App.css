@@ -80,19 +80,23 @@ body {
 
 .sidebar button {
   width: 100%;
-  margin-bottom: 12px;
-  padding: 10px;
-  background: #009fe3;
-  color: white;
-  border: none;
+  padding: 12px;
   border-radius: 12px;
+  margin-bottom: 10px;
+  font-weight: 600;
+  border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  background: #00b9e3;
+  color: white;
+  transition: 0.2s;
 }
 
 .sidebar button:hover {
-  background: #0098cb;
   transform: translateY(-1px);
+}
+
+.delete-active {
+  background: #ff3b30 !important;
 }
 
 /* CANVAS */
@@ -462,30 +466,64 @@ button {
 }
 
 /* =========================
-   SMALL MOBILE
+   MOBILE HEADER (REAL PRO)
 ========================= */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
+
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    padding: 10px 12px;
+
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(20px);
+
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+
+  /* TITLE */
+  .title {
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  /* 🔥 IMPORTANT CHANGE */
+  .controls {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 equal buttons */
+    gap: 6px;
+  }
 
   .controls button {
-    font-size: 11px;
     padding: 6px;
-  }
-
-  .sidebar button {
     font-size: 11px;
-    padding: 6px;
+    border-radius: 10px;
+
+    background: #f2f2f7;
+    color: #1d1d1f;
+
+    transition: all 0.15s ease;
   }
 
-  .title {
-    font-size: 14px;
+  .controls button:active {
+    transform: scale(0.92);
   }
 
-  .canvas {
-    height: calc(100vh - 160px);
+  /* HIGHLIGHT BUTTONS */
+  .controls .dete {
+    background: #ff9500;
+    color: white;
   }
 
-  .island {
-    font-size: 12px;
-    padding: 12px;
+  .controls .primary {
+    background: #007aff;
+    color: white;
   }
 }
