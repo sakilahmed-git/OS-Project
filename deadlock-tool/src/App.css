@@ -6,6 +6,22 @@ body {
   color: #1d1d1f;
 }
 
+
+.canvas {
+  opacity: 0;
+  animation: canvasEnter 0.6s ease forwards;
+  animation-delay: 0.3s;
+}
+
+@keyframes canvasEnter {
+  to {
+    opacity: 1;
+  }
+}
+button:hover {
+  transform: translateY(-1px);
+}
+
 /* APP */
 .app {
   display: flex;
@@ -13,6 +29,18 @@ body {
   height: 100vh;
 }
 
+.app {
+  opacity: 0;
+  transform: scale(0.98);
+  animation: appEnter 0.4s ease forwards;
+}
+
+@keyframes appEnter {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 /* HEADER */
 .header {
   height: 60px;
@@ -69,6 +97,19 @@ body {
   border-right: 1px solid #e5e5e5;
   padding: 15px;
 }
+.sidebar {
+  transform: translateX(-20px);
+  opacity: 0;
+  animation: sidebarEnter 0.5s ease forwards;
+  animation-delay: 0.2s;
+}
+
+@keyframes sidebarEnter {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
 
 .controls .dete {
   color: white;
@@ -118,9 +159,9 @@ body {
   font-size: 14px;
 }
 
-.node {
-  fill: white;
-  stroke: #0071e3;
+.delete-active {
+  background: #ff3b30 !important;
+  box-shadow: 0 0 10px rgba(255,59,48,0.4);
 }
 
 .flow-edge {
@@ -282,6 +323,25 @@ li {
   background: rgba(0, 113, 227, 0.08);
   border: 1px solid rgba(0, 113, 227, 0.2);
   color: #0071e3;
+}
+.empty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #aaa;
+  font-size: 14px;
+}
+
+.info-panel {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(10px);
+  font-size: 13px;
+  line-height: 1.5;
+  border: 1px solid rgba(0,0,0,0.05);
 }
 
 /* =========================

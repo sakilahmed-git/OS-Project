@@ -363,6 +363,7 @@ const getEdgePoint = (from, to) => {
       {/* SIDEBAR */}
       <div className="sidebar">
 
+
   <button onClick={() => addNode("P")}>
     + Add Process
   </button>
@@ -375,13 +376,43 @@ const getEdgePoint = (from, to) => {
     className={mode === "delete" ? "delete-active" : ""}
     onClick={() => setMode(mode === "delete" ? "none" : "delete")}
   >
-    ❌ {mode === "delete" ? "Exit Delete" : "Delete"}
+    {mode === "delete" ? "Exit Delete" : "Delete"}
   </button>
+        <div className="info-panel">
+  <div>Processes: {nodes.filter(n => n.type === "P").length}</div>
+  <div>Resources: {nodes.filter(n => n.type === "R").length}</div>
+  <div>Edges: {edges.length}</div>
+  <div>
+    Deadlock: {cycle.length > 0 ? "YES" : "NO"}
+  </div>
+</div>
+{selected && (
+  <div className="info-panel">
+    <div>Selected: {selected}</div>
+    <div>
+      Type: {selected.startsWith("P") ? "Process" : "Resource"}
+    </div>
+    <div>
+      Connections: {
+        edges
+          .filter(e => e.from === selected || e.to === selected)
+          .map(e => `${e.from}→${e.to}`)
+          .join(", ") || "None"
+      }
+    </div>
+  </div>
+)}
 
 </div>
+      
 
       {/* CANVAS */}
       <div className="canvas">
+        {nodes.length === 0 && (
+  <div className="empty">
+    Start by adding Process or Resource
+  </div>
+)}
         <svg
   width="100%"
   height="100%"
@@ -452,6 +483,7 @@ const getEdgePoint = (from, to) => {
                 const dy = (start.y + end.y) / 2 - 60;
             return (
               <path
+
                 key={i}
                 onClick={(ev) => {
   ev.stopPropagation();
@@ -469,7 +501,15 @@ const getEdgePoint = (from, to) => {
     });
   }
 }}
-                
+                onMouseEnter={(ev) => {
+  if (mode === "delete") {
+    ev.target.style.stroke = "#ff3b30";
+    ev.target.style.strokeWidth = "4";
+  }
+}}
+onMouseLeave={(ev) => {
+  ev.target.style.strokeWidth = "";
+}}
                 d={`M ${start.x} ${start.y} Q ${dx} ${dy} ${end.x} ${end.y}`}
                 stroke={
                   isRemoved
@@ -536,12 +576,20 @@ return (
   key={n.id}
   transform={`translate(${n.x}, ${n.y})`}
   onMouseDown={(e) => {
-    e.stopPropagation();       // ✅ IMPORTANT
+    e.stopPropagation();
     setDragging(n.id);
   }}
   onClick={(e) => {
-    e.stopPropagation();       // ✅ IMPORTANT
+    e.stopPropagation();
     handleNodeClick(n.id);
+  }}
+  onMouseEnter={(e) => {
+    if (mode === "delete") {
+      e.currentTarget.style.opacity = 0.6;
+    }
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.opacity = 1;
   }}
   style={{ cursor: "pointer" }}
 >
